@@ -1,0 +1,60 @@
+name: Update CSV Daily
+on:
+  schedule:
+    - cron: '0 0 * * *' # يعمل يوميًا عند منتصف الليل
+  workflow_dispatch:
+
+jobs:
+  update-csv:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: pip install pandas
+
+      - name: Merge CSVs
+        run: |
+          python -c "
+          import pandas as pd
+          import glob
+          import os
+
+          # جمع كل ملفات CSV في مجلد Uploads
+          csv_files = glob.glob('Uploads/*.csv')
+          if not csv_files:
+              print('لا توجد ملفات CSV للدمج')
+              exit(0)
+
+          # دمج الملفات في DataFrame واحد
+          dfs = [pd.read_csv(f) for f in csv_files]
+          combined_df = pd.concat(dfs, ignore_index=True)
+
+          # إزالة التكرارات بناءً على الرمز/الباركود (إن وجد)
+          if 'الرمز/الباركود' in combined_df.columns:
+              combined_df = combined_df.drop_duplicates(subset=['الرمز/الباركود'], keep='last')
+
+          # حفظ الملف الرئيسي
+          combined_df.to_csv('data/main.csv', index=False)
+
+          # حذف الملفات المؤقتة
+          for f in csv_files:
+              os.remove(f)
+          "
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add data/main.csv
+          git add Uploads -f
+          git commit -m "تحديث يومي للبيانات"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
