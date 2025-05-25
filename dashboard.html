@@ -5,137 +5,177 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم - منصة رفع البيانات</title>
     <link href="output.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         body { font-family: 'Amiri', sans-serif; background-color: #f5f7fa; margin: 0; }
-        .sidebar { width: 250px; height: 100vh; background-color: #fff; padding-top: 1rem; position: fixed; }
-        .sidebar-item { padding: 0.75rem 1rem; color: #333; text-decoration: none; display: block; }
-        .sidebar-item.active { background-color: #e9ecef; }
-        .main-content { margin-right: 250px; padding: 1rem; }
+        .main-content { padding: 1rem; }
         .header { display: flex; justify-content: space-between; align-items: center; background-color: #fff; padding: 0.5rem 1rem; border-bottom: 1px solid #dee2e6; }
         .logo { height: 40px; }
         .nav-actions { display: flex; align-items: center; gap: 1rem; }
-        .nav-actions select { padding: 0.25rem; }
         .filter-section { background-color: #fff; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; }
         .filter-section label { margin-left: 0.5rem; }
-        .filter-section select { padding: 0.25rem; width: 100%; margin-bottom: 0.5rem; }
+        .filter-section select, .filter-section input { padding: 0.25rem; width: 100%; margin-bottom: 0.5rem; }
+        .input-section { background-color: #fff; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; }
+        .input-section label { margin-left: 0.5rem; }
+        .input-section input, .input-section select { padding: 0.25rem; width: 100%; margin-bottom: 0.5rem; }
         .table-container { background-color: #fff; padding: 1rem; border-radius: 4px; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 0.5rem; text-align: right; border-bottom: 1px solid #dee2e6; }
         th { background-color: #f8f9fa; }
         .action-btn { background-color: #28a745; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; text-decoration: none; margin-left: 0.25rem; }
-        .pagination { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; }
-        .pagination a { color: #28a745; text-decoration: none; padding: 0.25rem 0.5rem; }
-        .pagination a.active { background-color: #28a745; color: white; border-radius: 4px; }
+        .details-modal, .calendar-modal { display: none; position: fixed; top: 0; right: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); }
+        .details-content, .calendar-content { background-color: #fff; margin: 5% auto; padding: 1rem; border-radius: 4px; width: 80%; max-width: 600px; }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <img src="assets/brandLogo.23c31b2e.svg" alt="SCOC Logo" class="logo mx-auto mb-4">
-        <a href="#" class="sidebar-item active">لوحة التحكم</a>
-        <a href="#" class="sidebar-item">NICU</a>
-        <a href="#" class="sidebar-item">الإعدادات</a>
-    </div>
     <div class="main-content">
         <div class="header">
-            <h2>إرسالات Eod</h2>
+            <img src="assets/brandLogo.23c31b2e.svg" alt="Brand Logo" class="logo">
             <div class="nav-actions">
-                <select>
-                    <option>NICU</option>
-                </select>
                 <div class="flex gap-2">
-                    <a href="#" class="action-btn">📅</a>
+                    <a href="#" class="action-btn" id="calendarBtn">📅</a>
                     <a href="#" class="action-btn">🔍</a>
                     <a href="#" class="action-btn">+</a>
                 </div>
                 <a href="#" class="text-blue-500">اللغة</a>
                 <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">A</div>
+                <button id="logoutBtn" class="bg-red-500 text-white px-4 py-1 rounded">تسجيل الخروج</button>
             </div>
         </div>
-        <div class="filter-section">
-            <h3>إدراج الإرسالات: 11645</h3>
-            <label>المنطقة *</label>
-            <select>
-                <option value="">اختر المنطقة</option>
-                <option>الرياض</option>
-                <option>مكة</option>
-                <option>المدينة</option>
-            </select>
-            <label>المستشفى *</label>
-            <select>
-                <option value="">اختر المستشفى</option>
-                <option>مستشفى الرياض</option>
-                <option>مستشفى مكة</option>
-            </select>
-            <label>المستوى *</label>
-            <select>
-                <option value="">اختر المستوى</option>
-                <option>NICU warehouse</option>
-            </select>
-            <button class="bg-green-500 text-white px-4 py-1 rounded mt-2">إعادة تعيين الكل</button>
-        </div>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>المنطقة</th>
-                        <th>المستشفى</th>
-                        <th>المستوى</th>
-                        <th>تم الإرسال بواسطة</th>
-                        <th>تاريخ الإرسال</th>
-                        <th>الإجراء</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>بيشة</td>
-                        <td>مستشفى بيشة العام</td>
-                        <td>NICU warehouse</td>
-                        <td>محمد علي</td>
-                        <td>25-05-2025</td>
-                        <td>
-                            <a href="#" class="action-btn">👁️</a>
-                            <a href="#" class="action-btn">🗑️</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>الأحساء</td>
-                        <td>تجمع صحي الأحساء</td>
-                        <td>NICU warehouse</td>
-                        <td>علي عبدالله</td>
-                        <td>25-05-2025</td>
-                        <td>
-                            <a href="#" class="action-btn">👁️</a>
-                            <a href="#" class="action-btn">🗑️</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>مكة</td>
-                        <td>مستشفى الحدود الشمالية</td>
-                        <td>NICU warehouse</td>
-                        <td>بimا omar dokol</td>
-                        <td>25-05-2025</td>
-                        <td>
-                            <a href="#" class="action-btn">👁️</a>
-                            <a href="#" class="action-btn">🗑️</a>
-                        </td>
-                    </tr>
-                    <!-- Add more rows as needed -->
-                </tbody>
-            </table>
-            <div class="pagination">
-                <a href="#">Previous</a>
-                <a href="#" class="active">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#">4</a>
-                <a href="#">5</a>
-                <a href="#">...</a>
-                <a href="#">1164</a>
-                <a href="#">1165</a>
-                <a href="#">Next</a>
+
+        <div id="adminView" style="display: none;">
+            <h2>لوحة التحكم - عرض المدير</h2>
+            <div class="filter-section">
+                <h3>إدراج الإرسالات: <span id="totalEntriesAdmin">0</span></h3>
+                <label>تحميل ملف CSV</label>
+                <input type="file" id="fileInputAdmin" accept=".csv">
+                <label>المنطقة *</label>
+                <select id="regionFilterAdmin">
+                    <option value="">اختر المنطقة</option>
+                    <option value="منى">منى</option>
+                    <option value="عرفات">عرفات</option>
+                    <option value="مزدلفة">مزدلفة</option>
+                </select>
+                <label>المستشفى *</label>
+                <select id="hospitalFilterAdmin">
+                    <option value="">اختر المستشفى</option>
+                    <option value="هلال أحمر">هلال أحمر</option>
+                    <option value="الحرس الوطني">الحرس الوطني</option>
+                    <option value="وزارة الدفاع">وزارة الدفاع</option>
+                    <option value="مستشفى فقية">مستشفى فقية</option>
+                    <option value="القطاع الخاص">القطاع الخاص</option>
+                    <option value="مستشفى قوى الأمن">مستشفى قوى الأمن</option>
+                </select>
+                <button id="resetFiltersAdmin" class="bg-green-500 text-white px-4 py-1 rounded mt-2">إعادة تعيين الكل</button>
             </div>
-            <p class="text-sm text-gray-500 mt-2">عرض 20 من 11645</p>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>المنطقة</th>
+                            <th>المستشفى</th>
+                            <th>اسم المستخدم</th>
+                            <th>تاريخ الإرسال</th>
+                            <th>الإجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="submissionTableAdmin"></tbody>
+                </table>
+            </div>
         </div>
+
+        <div id="userView">
+            <h2>لوحة التحكم - إدخال بيانات</h2>
+            <div class="input-section">
+                <h3>إدخال بيانات جديدة</h3>
+                <label>المنطقة *</label>
+                <select id="regionInput">
+                    <option value="">اختر المنطقة</option>
+                    <option value="منى">منى</option>
+                    <option value="عرفات">عرفات</option>
+                    <option value="مزدلفة">مزدلفة</option>
+                </select>
+                <label>المستشفى *</label>
+                <select id="hospitalInput">
+                    <option value="">اختر المستشفى</option>
+                    <option value="هلال أحمر">هلال أحمر</option>
+                    <option value="الحرس الوطني">الحرس الوطني</option>
+                    <option value="وزارة الدفاع">وزارة الدفاع</option>
+                    <option value="مستشفى فقية">مستشفى فقية</option>
+                    <option value="القطاع الخاص">القطاع الخاص</option>
+                    <option value="مستشفى قوى الأمن">مستشفى قوى الأمن</option>
+                </select>
+                <label>اسم المستخدم *</label>
+                <input type="text" id="usernameInput" placeholder="أدخل اسم المستخدم" readonly>
+                <label>تاريخ الإرسال *</label>
+                <input type="date" id="dateInput">
+                <button id="submitEntryBtn" class="bg-blue-500 text-white px-4 py-1 rounded mt-2">إرسال</button>
+                <label>تحميل ملف CSV</label>
+                <input type="file" id="fileInputUser" accept=".csv">
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>المنطقة</th>
+                            <th>المستشفى</th>
+                            <th>اسم المستخدم</th>
+                            <th>تاريخ الإرسال</th>
+                            <th>الإجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="submissionTableUser"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="detailsModal" class="details-modal">
+            <div class="details-content">
+                <h3>تفاصيل الإرسال</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>المنطقة</th>
+                            <th>المستشفى</th>
+                            <th>اسم المستخدم</th>
+                            <th>تاريخ الإرسال</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detailsTable"></tbody>
+                </table>
+                <button onclick="closeDetails()">إغلاق</button>
+            </div>
+        </div>
+
+        <div id="calendarModal" class="calendar-modal">
+            <div class="calendar-content">
+                <h3>إدخال بيانات جديدة</h3>
+                <label>المنطقة *</label>
+                <select id="calendarRegionInput">
+                    <option value="">اختر المنطقة</option>
+                    <option value="منى">منى</option>
+                    <option value="عرفات">عرفات</option>
+                    <option value="مزدلفة">مزدلفة</option>
+                </select>
+                <label>المستشفى *</label>
+                <select id="calendarHospitalInput">
+                    <option value="">اختر المستشفى</option>
+                    <option value="هلال أحمر">هلال أحمر</option>
+                    <option value="الحرس الوطني">الحرس الوطني</option>
+                    <option value="وزارة الدفاع">وزارة الدفاع</option>
+                    <option value="مستشفى فقية">مستشفى فقية</option>
+                    <option value="القطاع الخاص">القطاع الخاص</option>
+                    <option value="مستشفى قوى الأمن">مستشفى قوى الأمن</option>
+                </select>
+                <label>اسم المستخدم *</label>
+                <input type="text" id="calendarUsernameInput" placeholder="أدخل اسم المستخدم" readonly>
+                <label>تاريخ الإرسال *</label>
+                <input type="date" id="calendarDateInput">
+                <button id="calendarSubmitBtn" class="bg-blue-500 text-white px-4 py-1 rounded mt-2">إرسال</button>
+                <button onclick="closeCalendar()">إغلاق</button>
+            </div>
+        </div>
+
         <p class="text-sm text-gray-500 mt-2">مدعوم من Ascend Solutions</p>
     </div>
 
@@ -146,8 +186,205 @@
             window.location.href = "index.html";
         }
 
-        // Placeholder for future CSV integration
-        // You can replace the static table data with dynamic data from CSV using PapaParse
+        // تحديد الدور واسم المستخدم
+        let userRole = localStorage.getItem('userRole') || 'User';
+        let username = localStorage.getItem('username') || 'admin@example.com';
+
+        // عرض الواجهة بناءً على الدور
+        const adminView = document.getElementById('adminView');
+        const userView = document.getElementById('userView');
+        if (userRole === 'Admin') {
+            adminView.style.display = 'block';
+            userView.style.display = 'none';
+        } else {
+            adminView.style.display = 'none';
+            userView.style.display = 'block';
+            document.getElementById('usernameInput').value = username;
+            document.getElementById('calendarUsernameInput').value = username;
+        }
+
+        // تحميل البيانات من localStorage
+        let entries = JSON.parse(localStorage.getItem('entries')) || [];
+
+        // دالة لتحديث جدول الإدخالات
+        function updateTable(tbodyId, filterRole = null) {
+            const tbody = document.getElementById(tbodyId);
+            tbody.innerHTML = '';
+            let filteredEntries = entries;
+
+            // تصفية بناءً على الدور
+            if (filterRole === 'User') {
+                filteredEntries = entries.filter(entry => entry.username === username);
+            }
+
+            // تصفية بناءً على الفلاتر (للمدير فقط)
+            if (tbodyId === 'submissionTableAdmin') {
+                const regionFilter = document.getElementById('regionFilterAdmin').value;
+                const hospitalFilter = document.getElementById('hospitalFilterAdmin').value;
+                if (regionFilter) {
+                    filteredEntries = filteredEntries.filter(entry => entry.region === regionFilter);
+                }
+                if (hospitalFilter) {
+                    filteredEntries = filteredEntries.filter(entry => entry.hospital === hospitalFilter);
+                }
+            }
+
+            filteredEntries.forEach(entry => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${entry.region}</td>
+                    <td>${entry.hospital}</td>
+                    <td>${entry.username}</td>
+                    <td>${entry.date}</td>
+                    <td><button class="action-btn" onclick="showDetails(this)">👁️</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // تحديث عدد الإدخالات
+            const totalEntries = filteredEntries.length;
+            document.getElementById(tbodyId === 'submissionTableAdmin' ? 'totalEntriesAdmin' : 'totalEntriesUserFooter').textContent = totalEntries;
+        }
+
+        // تحديث الجداول عند التحميل
+        updateTable('submissionTableAdmin');
+        updateTable('submissionTableUser', 'User');
+
+        // إضافة إدخال جديد من النموذج الأساسي
+        document.getElementById('submitEntryBtn').addEventListener('click', () => {
+            const region = document.getElementById('regionInput').value;
+            const hospital = document.getElementById('hospitalInput').value;
+            const date = document.getElementById('dateInput').value;
+            if (!region || !hospital || !date) {
+                alert('يرجى ملء جميع الحقول!');
+                return;
+            }
+            const newEntry = { region, hospital, username, date };
+            entries.push(newEntry);
+            localStorage.setItem('entries', JSON.stringify(entries));
+            updateTable('submissionTableAdmin');
+            updateTable('submissionTableUser', 'User');
+            alert('تم إضافة الإدخال بنجاح!');
+        });
+
+        // إضافة إدخال جديد من النموذج المنبثق
+        document.getElementById('calendarSubmitBtn').addEventListener('click', () => {
+            const region = document.getElementById('calendarRegionInput').value;
+            const hospital = document.getElementById('calendarHospitalInput').value;
+            const date = document.getElementById('calendarDateInput').value;
+            if (!region || !hospital || !date) {
+                alert('يرجى ملء جميع الحقول!');
+                return;
+            }
+            const newEntry = { region, hospital, username, date };
+            entries.push(newEntry);
+            localStorage.setItem('entries', JSON.stringify(entries));
+            updateTable('submissionTableAdmin');
+            updateTable('submissionTableUser', 'User');
+            closeCalendar();
+            alert('تم إضافة الإدخال بنجاح!');
+        });
+
+        // تحميل ملف CSV
+        function handleCSVUpload(fileInputId, callback) {
+            const fileInput = document.getElementById(fileInputId);
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('يرجى اختيار ملف CSV');
+                return;
+            }
+            Papa.parse(file, {
+                header: true,
+                complete: function(results) {
+                    const data = results.data;
+                    data.forEach(row => {
+                        if (row['المنطقة'] && row['المستشفى'] && row['اسم المستخدم'] && row['تاريخ الإرسال']) {
+                            entries.push({
+                                region: row['المنطقة'],
+                                hospital: row['المستشفى'],
+                                username: row['اسم المستخدم'],
+                                date: row['تاريخ الإرسال']
+                            });
+                        }
+                    });
+                    localStorage.setItem('entries', JSON.stringify(entries));
+                    callback();
+                    alert('تم تحميل ملف CSV بنجاح!');
+                },
+                error: function(error) {
+                    alert('خطأ في تحليل ملف CSV: ' + error.message);
+                }
+            });
+        }
+
+        document.getElementById('fileInputAdmin').addEventListener('change', () => {
+            handleCSVUpload('fileInputAdmin', () => {
+                updateTable('submissionTableAdmin');
+                updateTable('submissionTableUser', 'User');
+            });
+        });
+
+        document.getElementById('fileInputUser').addEventListener('change', () => {
+            handleCSVUpload('fileInputUser', () => {
+                updateTable('submissionTableAdmin');
+                updateTable('submissionTableUser', 'User');
+            });
+        });
+
+        // تطبيق الفلاتر
+        document.getElementById('regionFilterAdmin').addEventListener('change', () => updateTable('submissionTableAdmin'));
+        document.getElementById('hospitalFilterAdmin').addEventListener('change', () => updateTable('submissionTableAdmin'));
+        document.getElementById('resetFiltersAdmin').addEventListener('click', () => {
+            document.getElementById('regionFilterAdmin').value = '';
+            document.getElementById('hospitalFilterAdmin').value = '';
+            updateTable('submissionTableAdmin');
+        });
+
+        // عرض التفاصيل
+        function showDetails(button) {
+            const row = button.closest('tr');
+            const region = row.cells[0].textContent;
+            const hospital = row.cells[1].textContent;
+            const username = row.cells[2].textContent;
+            const date = row.cells[3].textContent;
+
+            const detailsTable = document.getElementById('detailsTable');
+            detailsTable.innerHTML = `
+                <tr>
+                    <td>${region}</td>
+                    <td>${hospital}</td>
+                    <td>${username}</td>
+                    <td>${date}</td>
+                </tr>
+            `;
+            document.getElementById('detailsModal').style.display = 'block';
+        }
+
+        function closeDetails() {
+            document.getElementById('detailsModal').style.display = 'none';
+        }
+
+        // عرض وإغلاق النموذج المنبثق للتقويم
+        document.getElementById('calendarBtn').addEventListener('click', () => {
+            document.getElementById('calendarModal').style.display = 'block';
+            document.getElementById('calendarUsernameInput').value = username;
+        });
+
+        function closeCalendar() {
+            document.getElementById('calendarModal').style.display = 'none';
+            document.getElementById('calendarRegionInput').value = '';
+            document.getElementById('calendarHospitalInput').value = '';
+            document.getElementById('calendarDateInput').value = '';
+        }
+
+        // تسجيل الخروج
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('username');
+            localStorage.removeItem('entries');
+            window.location.href = "index.html";
+        });
     </script>
 </body>
 </html>
