@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - منصة رفع البيانات</title>
+    <link href="output.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Amiri', sans-serif; background-color: #f5f7fa; margin: 0; }
+        .sidebar { width: 250px; height: 100vh; background-color: #fff; padding-top: 1rem; position: fixed; }
+        .sidebar-item { padding: 0.75rem 1rem; color: #333; text-decoration: none; display: block; }
+        .sidebar-item.active { background-color: #e9ecef; }
+        .main-content { margin-right: 250px; padding: 1rem; }
+        .header { display: flex; justify-content: space-between; align-items: center; background-color: #fff; padding: 0.5rem 1rem; border-bottom: 1px solid #dee2e6; }
+        .logo { height: 40px; }
+        .nav-actions { display: flex; align-items: center; gap: 1rem; }
+        .nav-actions select { padding: 0.25rem; }
+        .filter-section { background-color: #fff; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; }
+        .filter-section label { margin-left: 0.5rem; }
+        .filter-section select { padding: 0.25rem; width: 100%; margin-bottom: 0.5rem; }
+        .table-container { background-color: #fff; padding: 1rem; border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.5rem; text-align: right; border-bottom: 1px solid #dee2e6; }
+        th { background-color: #f8f9fa; }
+        .action-btn { background-color: #28a745; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; text-decoration: none; margin-left: 0.25rem; }
+        .pagination { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; }
+        .pagination a { color: #28a745; text-decoration: none; padding: 0.25rem 0.5rem; }
+        .pagination a.active { background-color: #28a745; color: white; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <img src="assets/brandLogo.23c31b2e.svg" alt="SCOC Logo" class="logo mx-auto mb-4">
+        <a href="#" class="sidebar-item active">لوحة التحكم</a>
+        <a href="#" class="sidebar-item">NICU</a>
+        <a href="#" class="sidebar-item">الإعدادات</a>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <h2>إرسالات Eod</h2>
+            <div class="nav-actions">
+                <select>
+                    <option>NICU</option>
+                </select>
+                <div class="flex gap-2">
+                    <a href="#" class="action-btn">📅</a>
+                    <a href="#" class="action-btn">🔍</a>
+                    <a href="#" class="action-btn">+</a>
+                </div>
+                <a href="#" class="text-blue-500">اللغة</a>
+                <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">A</div>
+            </div>
+        </div>
+        <div class="filter-section">
+            <h3>إدراج الإرسالات: 11645</h3>
+            <label>المنطقة *</label>
+            <select>
+                <option value="">اختر المنطقة</option>
+                <option>الرياض</option>
+                <option>مكة</option>
+                <option>المدينة</option>
+            </select>
+            <label>المستشفى *</label>
+            <select>
+                <option value="">اختر المستشفى</option>
+                <option>مستشفى الرياض</option>
+                <option>مستشفى مكة</option>
+            </select>
+            <label>المستوى *</label>
+            <select>
+                <option value="">اختر المستوى</option>
+                <option>NICU warehouse</option>
+            </select>
+            <button class="bg-green-500 text-white px-4 py-1 rounded mt-2">إعادة تعيين الكل</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>المنطقة</th>
+                        <th>المستشفى</th>
+                        <th>المستوى</th>
+                        <th>تم الإرسال بواسطة</th>
+                        <th>تاريخ الإرسال</th>
+                        <th>الإجراء</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>بيشة</td>
+                        <td>مستشفى بيشة العام</td>
+                        <td>NICU warehouse</td>
+                        <td>محمد علي</td>
+                        <td>25-05-2025</td>
+                        <td>
+                            <a href="#" class="action-btn">👁️</a>
+                            <a href="#" class="action-btn">🗑️</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>الأحساء</td>
+                        <td>تجمع صحي الأحساء</td>
+                        <td>NICU warehouse</td>
+                        <td>علي عبدالله</td>
+                        <td>25-05-2025</td>
+                        <td>
+                            <a href="#" class="action-btn">👁️</a>
+                            <a href="#" class="action-btn">🗑️</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>مكة</td>
+                        <td>مستشفى الحدود الشمالية</td>
+                        <td>NICU warehouse</td>
+                        <td>بimا omar dokol</td>
+                        <td>25-05-2025</td>
+                        <td>
+                            <a href="#" class="action-btn">👁️</a>
+                            <a href="#" class="action-btn">🗑️</a>
+                        </td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+            <div class="pagination">
+                <a href="#">Previous</a>
+                <a href="#" class="active">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <a href="#">5</a>
+                <a href="#">...</a>
+                <a href="#">1164</a>
+                <a href="#">1165</a>
+                <a href="#">Next</a>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">عرض 20 من 11645</p>
+        </div>
+        <p class="text-sm text-gray-500 mt-2">مدعوم من Ascend Solutions</p>
+    </div>
+
+    <script>
+        // التحقق من حالة تسجيل الدخول
+        if (!localStorage.getItem('isAuthenticated')) {
+            alert("يرجى تسجيل الدخول أولاً!");
+            window.location.href = "index.html";
+        }
+
+        // Placeholder for future CSV integration
+        // You can replace the static table data with dynamic data from CSV using PapaParse
+    </script>
+</body>
+</html>
