@@ -136,6 +136,13 @@
                 <img src="https://img.icons8.com/ios-filled/20/666666/lock.png" alt="Password Icon" class="input-icon">
                 <input type="password" id="password" placeholder="كلمة المرور" class="input-field" required>
             </div>
+            <div class="input-group">
+                <label for="role">اختر الدور *</label>
+                <select id="role" class="input-field">
+                    <option value="User">مستخدم</option>
+                    <option value="Admin">مدير</option>
+                </select>
+            </div>
             <a href="#" class="forgot-password">هل نسيت كلمة المرور؟</a>
             <button id="loginBtn" class="login-btn">تسجيل الدخول</button>
             <p id="errorMessage" class="error-message">البريد الإلكتروني أو كلمة المرور غير صحيحة!</p>
@@ -146,14 +153,16 @@
         document.getElementById('loginBtn').addEventListener('click', () => {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
             const errorMessage = document.getElementById('errorMessage');
 
-            // بيانات تسجيل الدخول المؤقتة (يمكن تغييرها)
             const correctEmail = "admin@example.com";
             const correctPassword = "yourpassword123";
 
             if (email === correctEmail && password === correctPassword) {
                 localStorage.setItem('isAuthenticated', 'true');
+                localStorage.setItem('userRole', role);
+                localStorage.setItem('username', email);
                 window.location.href = "dashboard.html";
             } else {
                 errorMessage.style.display = 'block';
